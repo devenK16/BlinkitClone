@@ -22,7 +22,7 @@ object Utils {
     fun hideDialog(){
         dialog?.dismiss()
     }
-    fun Toast(context: Context, message:String){
+    fun showToast(context: Context, message:String){
         Toast.makeText(context,message,Toast.LENGTH_SHORT).show()
     }
     private var firebaseAuthInstance : FirebaseAuth?=null

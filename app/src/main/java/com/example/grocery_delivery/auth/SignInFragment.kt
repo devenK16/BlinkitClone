@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.grocery_delivery.R
+import com.example.grocery_delivery.Utils
 import com.example.grocery_delivery.databinding.FragmentSignInBinding
 
 /**
@@ -26,24 +27,26 @@ class SignInFragment : Fragment() {
     ): View? {
         binding = FragmentSignInBinding.inflate(layoutInflater)
         SetStatusBarColor()
-        getNumber()
-        onContinueClick()
+        getUserNumber()
+        onContinueButtonClick()
         return binding.root
     }
 
-    private fun onContinueClick() {
+    private fun onContinueButtonClick() {
         binding.continuebtn.setOnClickListener {
-            val number=binding.etUserNumber.text
-            if (number!!.isEmpty() || number.length<10 || number.length>10){
-                binding.etUserNumber.error="Invalid Number"
-                return@setOnClickListener
+            val number=binding.etUserNumber.text.toString()
+
+            if (number.isEmpty() || number.length != 10 ){
+                Utils.showToast(requireContext()  ,"please enter valid phone number")
             }
-            val bundle= Bundle()
-            bundle.putString("number", number.toString())
-            findNavController().navigate(R.id.action_signInFragment_to_OTPFragment,bundle)
+            else{
+                val bundle= Bundle()
+                bundle.putString("number", number)
+                findNavController().navigate(R.id.action_signInFragment_to_OTPFragment,bundle)
+            }
         }
     }
-    private fun getNumber() {
+    private fun getUserNumber() {
         binding.etUserNumber.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 

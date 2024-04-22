@@ -1,5 +1,6 @@
 package com.example.grocery_delivery.auth
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -14,14 +15,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.grocery_delivery.R
 import com.example.grocery_delivery.Utils
+import com.example.grocery_delivery.activity.UsersMainActivity
 import com.example.grocery_delivery.databinding.FragmentOTPBinding
+import com.example.grocery_delivery.models.Users
 import com.example.grocery_delivery.viewmodels.AuthViewModel
 import kotlinx.coroutines.launch
 
 class OTPFragment : Fragment() {
     private val viewmodel: AuthViewModel by viewModels()
     private lateinit var binding: FragmentOTPBinding
-    private lateinit var number:String
+    private lateinit var userNumber: String
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,35 +32,93 @@ class OTPFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = FragmentOTPBinding.inflate(layoutInflater)
         getUserNumber()
-        setStatusBarColor()
         customizeEnteringOTP()
+        sendOtp()
         onBackButtonClicked()
+        setStatusBarColor()
+        onLoginButtonClicked()
         return binding.root
     }
 
-    private fun sendOtp(number: String) {
-        com.example.grocery_delivery.Utils.showDialog(requireContext(),"Sending OTP")
+    private fun onLoginButtonClicked() {
+        binding.btnLogin.setOnClickListener {
+            Utils.showDialog(requireContext(), "Signing You...")
+            val editTexts = arrayOf(
+                binding.otp1,
+                binding.otp2,
+                binding.otp3,
+                binding.otp4,
+                binding.otp5,
+                binding.otp6
+            )
+            val otp = editTexts.joinToString("") {
+                it.text.toString()
+            }
 
+            if (otp.length < editTexts.size) {
+                Utils.showToast(requireContext(), "Please enter correct otp")
+            } else {
+                editTexts.forEach {
+                    it.text?.clear(); it.clearFocus()
+
+                }
+                verifyOtp(otp)
+            }
+        }
+    }
+
+    private fun verifyOtp(otp: String) {
+        val user =
+            Users(uid = Utils.getCurrentUid(), userPhoneNumber = userNumber, userAddress = null)
         viewmodel.apply {
-            sendOtp(number,requireActivity())
+            signInWithPhoneAuthCredential(otp, userNumber , user)
+
             lifecycleScope.launch {
-                otpSent.collect{
-                    if (it){
+                viewmodel.isSignedInSuccessfully.collect {
+                    if (it) {
                         Utils.hideDialog()
-                        Utils.Toast(requireContext(),"OTP sent Successfully")
+                        Utils.showToast(requireContext(), "Logged In")
+                        val intent = Intent( requireContext() , UsersMainActivity::class.java)
+                        startActivity(intent)
+                        requireActivity().finish()
                     }
                 }
             }
         }
     }
+
+    private fun sendOtp() {
+        Utils.showDialog(requireContext(), "Sending OTP")
+
+        viewmodel.apply {
+            sendOtp(userNumber, requireActivity())
+            lifecycleScope.launch {
+                otpSent.collect { otpSent ->
+                    if (otpSent) {
+                        Utils.hideDialog()
+                        Utils.showToast(requireContext(), "Otp Sent..")
+                    }
+                }
+            }
+        }
+    }
+
     private fun onBackButtonClicked() {
         binding.toolbar.setNavigationOnClickListener {
             findNavController().navigate(R.id.action_OTPFragment_to_signInFragment)
         }
     }
+
     private fun customizeEnteringOTP() {
-        val editTexts = arrayOf(binding.otp1,binding.otp2,binding.otp3,binding.otp4,binding.otp5,binding.otp6)
-        for (i in editTexts.indices){
+        val editTexts = arrayOf(
+            binding.otp1,
+            binding.otp2,
+            binding.otp3,
+            binding.otp4,
+            binding.otp5,
+            binding.otp6
+        )
+        for (i in editTexts.indices) {
             editTexts[i].addTextChangedListener(object : TextWatcher {
                 override fun beforeTextChanged(
                     s: CharSequence?,
@@ -71,12 +132,12 @@ class OTPFragment : Fragment() {
                 }
 
                 override fun afterTextChanged(s: Editable?) {
-                    if (s?.length==1){
-                        if (i<editTexts.size-1) {
+                    if (s?.length == 1) {
+                        if (i < editTexts.size - 1) {
                             editTexts[i + 1].requestFocus()
                         }
-                    }else{
-                        if (i>0) {
+                    } else if (s?.length == 0) {
+                        if (i > 0) {
                             editTexts[i - 1].requestFocus()
                         }
                     }
@@ -87,17 +148,17 @@ class OTPFragment : Fragment() {
     }
 
     private fun getUserNumber() {
-        val bundle=arguments
-        number=bundle?.getString("number").toString()
-        binding.tvnumber.text=number
+        val bundle = arguments
+        userNumber = bundle?.getString("number").toString()
+        binding.tvnumber.text = userNumber
     }
 
     private fun setStatusBarColor() {
         activity?.window?.apply {
-            val statusBarColors= ContextCompat.getColor(requireContext(),R.color.yellow)
-            statusBarColor=statusBarColors
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                decorView.systemUiVisibility=View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            val statusBarColors = ContextCompat.getColor(requireContext(), R.color.yellow)
+            statusBarColor = statusBarColors
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
         }
     }
