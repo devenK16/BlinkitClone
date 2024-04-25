@@ -1,4 +1,4 @@
-package com.example.grocery_delivery
+package com.example.grocery_delivery.fragments
 
 import android.os.Build
 import android.os.Bundle
@@ -7,10 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
+import com.example.grocery_delivery.Constants
+import com.example.grocery_delivery.R
 import com.example.grocery_delivery.adapters.AdapterCategory
 import com.example.grocery_delivery.databinding.FragmentHomeBinding
 import com.example.grocery_delivery.models.Category
-import java.lang.reflect.Array
 
 
 class homeFragment : Fragment() {
@@ -23,7 +25,22 @@ class homeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(layoutInflater)
         SetStatusBarColor()
         SetAllCategories()
+        onSearchClicked()
+//        onProfileClicked()
         return binding.root
+    }
+
+//    private fun onProfileClicked() {
+//        binding.Profile.setOnClickListener {
+//            findNavController().navigate(R.id.action_homeFragment_to_profuileFragment)
+//        }
+//    }
+
+
+    private fun onSearchClicked() {
+        binding.searchEt.setOnClickListener{
+            findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
+        }
     }
 
     private fun SetAllCategories(){
