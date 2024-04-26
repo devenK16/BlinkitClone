@@ -92,7 +92,7 @@ dependencies {
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.0")
 
 //    // phone pay
-//    implementation("phonepe.intentsdk.android.release:IntentSDK:2.4.3")
+    implementation("phonepe.intentsdk.android.release:IntentSDK:2.4.3")
 
     //retrofit
     implementation("com.squareup.retrofit2:retrofit:2.10.0")
