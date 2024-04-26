@@ -38,25 +38,37 @@ class homeFragment : Fragment() {
 
 
     private fun onSearchClicked() {
-        binding.searchEt.setOnClickListener{
+        binding.searchEt.setOnClickListener {
             findNavController().navigate(R.id.action_homeFragment_to_searchFragment)
         }
     }
 
-    private fun SetAllCategories(){
+    private fun SetAllCategories() {
         val categoryList = ArrayList<Category>()
 
-        for( i in 0 until Constants.allProductsCategory.size){
-            categoryList.add(Category(Constants.allProductsCategory[i] , Constants.allProductsCategoryIcon[i]))
+        for (i in 0 until Constants.allProductsCategory.size) {
+            categoryList.add(
+                Category(
+                    Constants.allProductsCategory[i],
+                    Constants.allProductsCategoryIcon[i]
+                )
+            )
         }
 
-        binding.rvCategories.adapter = AdapterCategory(categoryList)
+        binding.rvCategories.adapter = AdapterCategory(categoryList, ::onCategoryClicked)
     }
-    private fun SetStatusBarColor(){
-        activity?.window?.apply{
+
+    fun onCategoryClicked(category: Category) {
+        val bundle = Bundle()
+        bundle.putString("categoryName", category.title)
+        findNavController().navigate(R.id.action_homeFragment_to_categoryFragment, bundle)
+    }
+
+    private fun SetStatusBarColor() {
+        activity?.window?.apply {
             val statusBarColors = ContextCompat.getColor(requireContext(), R.color.yellow)
             statusBarColor = statusBarColors
-            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
             }
         }

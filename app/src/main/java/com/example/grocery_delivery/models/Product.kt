@@ -12,7 +12,7 @@ data class Product(
     var productStock: Int? = null,
     var productCategory: String? = null,
     var productType: String? = null,
-    val itemCount: Int? = null,
+    var itemCount: Int? = null,
     val adminUid: String? = null,
     var productImageUris: ArrayList<String?>? = null,
     val timestamp: Long = System.currentTimeMillis()

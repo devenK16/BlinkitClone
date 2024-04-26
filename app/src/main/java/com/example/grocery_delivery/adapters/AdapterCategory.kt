@@ -7,13 +7,20 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import com.example.grocery_delivery.databinding.ItemViewProductCategoryBinding
 import com.example.grocery_delivery.models.Category
 
-class AdapterCategory (
-    val categoryList : ArrayList<Category>
+class AdapterCategory(
+    val categoryList: ArrayList<Category>,
+    val onCategoryClicked: (Category) -> Unit
 ) : RecyclerView.Adapter<AdapterCategory.CategoryViewHolder>() {
-    class CategoryViewHolder(val binding : ItemViewProductCategoryBinding) : ViewHolder(binding.root)
+    class CategoryViewHolder(val binding: ItemViewProductCategoryBinding) : ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        return CategoryViewHolder(ItemViewProductCategoryBinding.inflate(LayoutInflater.from(parent.context),parent,false))
+        return CategoryViewHolder(
+            ItemViewProductCategoryBinding.inflate(
+                LayoutInflater.from(parent.context),
+                parent,
+                false
+            )
+        )
     }
 
     override fun getItemCount(): Int {
@@ -21,13 +28,13 @@ class AdapterCategory (
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        val categoryList=categoryList[position]
+        val categoryList = categoryList[position]
         holder.binding.apply {
             CategoryImage.setImageResource(categoryList.image)
-            CategoryTitle.text=categoryList.title
+            CategoryTitle.text = categoryList.title
         }
-//        holder.itemView.setOnClickListener {
-//            onCategoryClicked(categoryList)
-//        }
+        holder.itemView.setOnClickListener {
+            onCategoryClicked(categoryList)
+        }
     }
 }

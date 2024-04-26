@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/green"
+            android:text="Products in the cart"
+            android:textStyle="bold"
+            android:textSize="@dimen/_15sdp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RVcartProducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_marginTop="@dimen/_5sdp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/llcart"
+            android:visibility="visible"
+            android:gravity="bottom|center"
+            android:padding="@dimen/_8sdp"
+            android:weightSum="1"
+            android:layout_margin="@dimen/_8sdp"
+            android:background="@drawable/bg_edit"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/llitemCart"
+                android:layout_weight="0.5"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="@dimen/_30sdp"
+                    android:background="@drawable/bg_see_all"
+                    android:padding="@dimen/_2sdp"
+                    android:src="@drawable/cart"
+                    android:id="@+id/ivProductImage"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/NumberOfProductCount"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:text="0"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/_15ssp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_3sdp"
+                    android:text="ITEM"
+                    android:layout_gravity="center"
+                    android:textSize="@dimen/_15ssp"/>
+
+
+
+                <ImageButton
+                    android:id="@+id/dropup"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_arrow_drop_up_24"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/btnNext"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:background="@drawable/add_btn_bg">
+
+                <TextView
+                    android:id="@+id/tvadd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:text="Next"
+                    android:textColor="#FFFFFF"
+                    android:textSize="@dimen/_12ssp"
+                    android:textStyle="bold"/>
+
+                <ImageButton
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:layout_gravity="center"
+                    android:background="@android:color/transparent"
+                    android:layout_marginStart="@dimen/_4sdp"
+                    android:src="@drawable/baseline_arrow_right_24"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

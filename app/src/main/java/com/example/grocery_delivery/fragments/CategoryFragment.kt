@@ -3,8 +3,6 @@ package com.example.grocery_delivery.fragments
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,70 +12,72 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.grocery_delivery.CartListener
-import com.example.grocery_delivery.Constants
 import com.example.grocery_delivery.R
 import com.example.grocery_delivery.Utils
-import com.example.grocery_delivery.adapters.AdapterCategory
 import com.example.grocery_delivery.adapters.AdapterProduct
-import com.example.grocery_delivery.databinding.FragmentHomeBinding
-import com.example.grocery_delivery.databinding.FragmentSearchBinding
+import com.example.grocery_delivery.databinding.FragmentCategoryBinding
 import com.example.grocery_delivery.databinding.ItemViewProductBinding
-import com.example.grocery_delivery.models.Category
 import com.example.grocery_delivery.models.Product
 import com.example.grocery_delivery.roomdb.cartProducts
 import com.example.grocery_delivery.viewmodels.UserViewModel
 import kotlinx.coroutines.launch
 
-class searchFragment : Fragment() {
+/**
+ * A simple [Fragment] subclass.
+ * Use the [categoryFragment.newInstance] factory method to
+ * create an instance of this fragment.
+ */
+class categoryFragment : Fragment() {
+    private lateinit var binding: FragmentCategoryBinding
+    var categoryName: String? = null
+    private lateinit var adapterProduct: AdapterProduct
     private val viewModel: UserViewModel by viewModels()
-    private lateinit var binding: FragmentSearchBinding
-    private lateinit var adapterProduct : AdapterProduct
     private var cartListener: CartListener? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        binding = FragmentSearchBinding.inflate(layoutInflater)
-        SetStatusBarColor()
-        getAllProducts()
+        binding = FragmentCategoryBinding.inflate(layoutInflater)
+        setStatusBarColor()
+        setTitle()
         onBackClicked()
-        searchFunction()
+        onSearchClicked()
+        getCategoryProducts(categoryName)
         return binding.root
     }
+
     private fun onBackClicked() {
-        binding.goBackHome.setOnClickListener {
-            findNavController().navigate(R.id.action_searchFragment_to_homeFragment)
+        binding.toolbar.setNavigationOnClickListener {
+            findNavController().navigate(R.id.action_categoryFragment_to_homeFragment)
         }
     }
 
-    private fun searchFunction() {
-        binding.searchRv.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+    private fun onSearchClicked() {
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.searchh -> {
+                    findNavController().navigate(R.id.action_categoryFragment_to_searchFragment)
+                    true
+                }
 
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                val query=s.toString().trim()
-                adapterProduct.filter.filter(query)
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-
-        })
-    }
-    private fun SetStatusBarColor(){
-        activity?.window?.apply{
-            val statusBarColors = ContextCompat.getColor(requireContext(), R.color.yellow)
-            statusBarColor = statusBarColors
-            if( Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                else -> {
+                    false
+                }
             }
         }
     }
 
-    private fun getAllProducts() {
+    private fun setTitle() {
+        val bundle = arguments
+        categoryName = bundle?.getString("categoryName")
+        binding.toolbar.title = categoryName
+    }
+
+    private fun getCategoryProducts(categoryName: String?) {
         binding.shimmerViewContainer.visibility = View.VISIBLE
         lifecycleScope.launch {
-            viewModel.fetchAllProducts().collect {
+            viewModel.getCategoryProducts(categoryName).collect {
                 if (it.isEmpty()) {
                     binding.textView2.visibility = View.VISIBLE
                     binding.productsRv.visibility = View.GONE
@@ -95,6 +95,15 @@ class searchFragment : Fragment() {
                 adapterProduct.originalList = ArrayList(it)
                 binding.shimmerViewContainer.visibility = View.GONE
             }
+        }
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is CartListener) {
+            cartListener = context
+        } else {
+            throw ClassCastException("Please implement cartListener")
         }
     }
 
@@ -164,22 +173,13 @@ class searchFragment : Fragment() {
 
         cartListener?.showCartLayout(-1)
     }
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is CartListener) {
-            cartListener = context
-        } else {
-            throw ClassCastException("Please implement cartListener")
-        }
-    }
 
-
-    private  fun saveProductInRoom(product: Product) {
-        val cartProducts= cartProducts(
+    private fun saveProductInRoom(product: Product) {
+        val cartProducts = cartProducts(
             productRandomId = product.productRandomId,
             productTitle = product.productTitle,
-            productQuantity = product.productQuantity.toString()+product.productTUnit.toString(),
-            productPrice = "₹"+"${product.productPrice}",
+            productQuantity = product.productQuantity.toString() + product.productTUnit.toString(),
+            productPrice = "₹" + "${product.productPrice}",
             productCount = product.itemCount,
             productStock = product.productStock,
             image = product.productImageUris?.get(0),
@@ -187,9 +187,17 @@ class searchFragment : Fragment() {
             adminUid = product.adminUid,
             productType = product.productType
         )
-        lifecycleScope.launch { viewModel.insertCartProduct(cartProducts)}
+        lifecycleScope.launch { viewModel.insertCartProduct(cartProducts) }
     }
 
+    private fun setStatusBarColor() {
+        activity?.window?.apply {
+            val statusBarColors = ContextCompat.getColor(requireContext(), R.color.yellow)
+            statusBarColor = statusBarColors
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            }
+        }
+    }
 
 }
-

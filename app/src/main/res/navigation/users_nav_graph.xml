@@ -15,6 +15,10 @@
             app:destination="@id/searchFragment"
             app:enterAnim="@anim/from_right"
             />
+        <action
+            android:id="@+id/action_homeFragment_to_categoryFragment"
+            app:enterAnim="@anim/from_left"
+            app:destination="@id/categoryFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -30,7 +34,16 @@
     </fragment>
     <fragment
         android:id="@+id/categoryFragment"
-        android:name="com.example.grocery_delivery.categoryFragment"
+        android:name="com.example.grocery_delivery.fragments.categoryFragment"
         android:label="fragment_category"
-        tools:layout="@layout/fragment_category" />
+        tools:layout="@layout/fragment_category" >
+        <action
+            android:id="@+id/action_categoryFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_homeFragment"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/homeFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>

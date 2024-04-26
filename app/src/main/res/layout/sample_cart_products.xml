@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="@dimen/_5sdp"
+    android:layout_margin="@dimen/_5sdp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        android:layout_margin="@dimen/_5sdp"
+        >
+        <ImageView
+            android:id="@+id/productImg"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:src="@drawable/sangam_milk"
+            android:layout_weight="0.5"
+            android:background="@drawable/bg_edit"
+            android:padding="@dimen/_5sdp"
+            />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_weight="1.6"
+            android:layout_marginStart="@dimen/_5sdp">
+            <TextView
+                android:id="@+id/productName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amul Milk"
+                android:textSize="@dimen/_12ssp"/>
+            <TextView
+                android:id="@+id/Quantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="40g"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp"/>
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="₹50"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_12ssp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/itemCount"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_weight="0.9"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_gravity="center"
+            android:text="1"
+            android:gravity="center"
+            android:textSize="@dimen/_15ssp"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/add_btn_bg"/>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
